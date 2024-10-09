@@ -1,0 +1,120 @@
+p {
+    margin-bottom: 5px;
+    margin-top: 0;
+    font-size: 20px;
+}
+
+div {
+    margin-bottom: 10px;
+}
+
+h3{
+    color: rgb(20, 163, 230);
+    font-size: 24px;
+}
+
+ul{
+    margin-left: -20px;
+    font-size: 20px;
+}
+
+li{
+    margin-bottom: 10px;
+}
+.cv-header-container{
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    column-gap: 15px;
+    margin-bottom: 0px;
+    
+}
+
+
+.contact-details{
+ 
+    text-align: right;
+    padding-right: 40px;
+    
+}
+
+.cv-body-container{
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    column-gap: 15px;
+    margin-top: 0px;
+}
+
+
+
+.education-text, .skills-text, 
+.certifications-text, .summary-text,
+.projects-text, .volunteer-experience-text{
+    padding-left: 20px;
+}
+
+.experience-text{
+   
+    padding-right: 40px;
+}
+
+.name{
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 20px;
+    color: rgb(20, 105, 233);
+    font-size: 36px;
+   
+
+}
+
+.position{
+    padding-left: 20px;
+    font-size: 24px;
+}
+
+
+.education, .summary{
+    margin-top: 0px;
+
+}
+
+
+.duration{
+    color: rgb(96, 96, 96);
+}
+
+.certificate, .experience{
+    font-weight: bold;
+    margin-top: 24px;
+}
+
+.location{
+    color: rgb(46, 46, 46);
+    margin-bottom: 20px;
+}
+
+.date{
+    font-weight: 400;
+}
+
+
+
+.profile-text{
+    margin-bottom: 20px;
+}
+
+.experience-summary{
+    margin-bottom: 30px;
+}
+
+@media (max-width: 768px) {
+    .cv-header-container, .cv-body-container {
+        grid-template-columns: 1fr;
+        text-align: center; 
+    }
+    .contact-details {
+        padding-right: 0;
+        text-align: center; 
+    }
+
+}
