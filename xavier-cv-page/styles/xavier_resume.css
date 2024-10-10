@@ -1,0 +1,175 @@
+@media (max-width: 480px) {
+
+  .cv-body-container {
+    margin-inline: 5px;
+    
+  }
+  .name {
+    font-size: 20px;
+    text-align: center;
+  }
+  .position {
+    font-size: 16px;
+  }
+  h3 {
+    font-size: 18px;
+  }
+  p, .contents {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .project-details {
+    max-width: 100%;
+  }
+}
+
+
+
+
+@media (max-width: 810px) {
+  .cv-body-container {
+    margin-inline: 12px;
+    
+  }
+  .name {
+    font-size: 30px;
+  }
+  p, .contents {
+    font-size: 18px;
+  }
+  h3{
+    font-size: 25px;}
+
+  .project-details{
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .cv-body-container {
+    margin-inline: 100px;
+  }
+  .name {
+    font-size: 40px;
+  }
+  p, .contents {
+    font-size: 20px;
+  }
+  h3 {
+    font-size: 25px;
+  }
+
+  .project-details{
+    max-width: 80%;
+  }
+}
+
+
+.portfolio-container, .cv-body-container,
+.education-container{
+  border-top: solid;
+  border-width: 8px;
+  border-color: rgb(87 186 134);
+  padding-top: 0px;
+}
+
+
+.cv-body-container{
+  
+  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+ 
+}
+
+
+h3{
+  font-size: 25px;
+  font-family: sans-serif;
+  font-weight: 600;
+  color: rgb(87 186 134);
+  margin: 0px;
+
+}
+
+p, .contents{
+  margin: 10px;
+  font-size: 20px;
+}
+
+.profile-container, .skills-container,
+.tech-stack-container, .portfolio-container,
+.experience-container, .education-container, 
+.certifications-container, .header,
+.image-certifications-container{
+  margin-top: 25px;
+  margin-bottom: 0px;
+  
+}
+
+.name{
+  font-size: 40px;
+  margin: 0px;
+  
+}
+
+.position{
+  color: rgb(15 176 79);
+  font-size: 25px;
+}
+
+ul{
+  list-style-type: none;
+  margin-top: 25px; 
+  margin-bottom: 0px;
+  
+}
+
+ul li::before{
+  content: "\2611";
+  margin-right: 10px;
+  display: inline-block;
+
+}
+
+.project-details {
+  padding: 15px;
+  margin-bottom: 25px;
+  
+}
+
+
+.headline-text{
+  color: rgb(96, 96, 96);
+}
+
+span, .date{
+  color: rgb(97, 96, 96);
+}
+
+a{
+  color: rgb(46, 102, 199);
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+.image-certifications-container{
+  display: grid;
+  grid-template-columns: 
+    repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: 16px;
+}
+
+img{
+  max-width: 100%;
+  height: auto;
+}
+
+.header,
+.image-certifications-container{
+  margin-bottom: 25px;
+}
+
+
+
