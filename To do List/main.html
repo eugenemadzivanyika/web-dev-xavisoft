@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> To Do List</title>
-  <link rel="stylesheet" href="/styles/main.css">
+  <title>To Do List</title>
+  <link rel="stylesheet" href="./styles/main.css">
 </head>
 <body>
 
@@ -12,31 +12,12 @@
     <h1>To Do List</h1>
   </div>
 
-    <div class="task-container">
-      <div class="task">
-        <div class="task-details">
-          <div>
-            <input class="checkbox" type="checkbox">
-          </div>
-          <div>
-            <p class="task-name">Do research</p>
-            <p class="task-time">Today, 23.00</p>
-            <p class="task-type">Personal</p>
-          </div>
-        </div>
-        <div><button class="trash-button"><img class="trash-image" src="/images/trash-can.png" alt="delete"></button></div>
-      </div>
+  <div class="task-container"></div>
 
-
-    
-  </div>
   <button class="add-task-button" id="add-task-button">+</button>
-
-  <div id="bottom-quick-add-panel"></div>
 
   <div class="quick-task-panel">
     <input class="quick-task-box" id="quick-task-box" type="text" placeholder="Enter Quick Task Here">
-
     <div>
       <button class="add-quick-task-button" id="add-quick-task-button">&#10003;</button>
     </div>
@@ -45,33 +26,37 @@
   <div class="bg-modal">
     <div class="modal">
       <div class="pop-up-header">
-
         <div class="buttons container">
-          <button class="back-button" id="back-button">&#8592;</button> </div>
-
+          <button class="back-button" id="back-button">&#8592;</button>
+        </div>
         <p class="new-task-header-text">New Task</p>
-
       </div>
 
       <div class="new-task-container">
-        <div>
-          <p class="new-task-headlines">Task</p>
-          <input class="new-task-name" type="text" placeholder="Enter Task Here">
+        <div class="task-details-container">
+          <p class="new-task-headlines">Task:</p>
+          <input class="new-task-name task-input" type="text" placeholder="Enter Task Here">
         </div>
     
-        <div>
-          <p class="new-task-headlines">Due Date</p>
-          <input class="due-date" type="date">
+        <div class="task-details-container">
+          <p class="new-task-headlines">Due Date:</p>
+          <input class="due-date task-input" type="date">
         </div>
     
-        <div class="time-container">
-          <p class="new-task-headlines">Due Time</p>
-          <input class="due-time" type="time">
+        <div class="time-container task-details-container">
+          <p class="new-task-headlines">Due Time:</p>
+          <input class="due-time task-input" type="time">
         </div>
 
-        <div class="priority-level">
-          <div class="urgent"><input class="priority-checkbox" type="checkbox" > <p>Urgent</p></div>
-          <div class="not-urgent"><input class="priority-checkbox" type="checkbox" > <p>Not Urgent</p></div>
+        <div class="priority-level task-details-container">
+          <div class="urgent">
+            <input class="priority-checkbox" id="urgent-checkbox" type="checkbox">
+            <p class="priority-text">Urgent</p>
+          </div>
+          <div class="not-urgent">
+            <input class="priority-checkbox" id="not-urgent-checkbox" type="checkbox">
+            <p class="priority-text">Not Urgent</p>
+          </div>
         </div>
 
         <div class="importance-level"></div>
@@ -80,13 +65,10 @@
       <div>
         <button class="add-new-task-button" id="add-new-task-button">&#10003;</button>
       </div>
-
-      </div>
     </div>
   </div>
 
-
-  <script src="/scripts/main.js"></script>
+  <script src="./scripts/main.js"></script>
   
 </body>
 </html>
