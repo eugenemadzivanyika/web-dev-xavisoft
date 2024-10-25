@@ -24,8 +24,29 @@ toDoListApp.get("/todolist", (req, res) => {
 // Add a new task
 toDoListApp.post("/todolist", (req, res) => {
   const newTask = { id: uuid(), ...req.body };
-  toDoList.push(newTask);
-  res.json({ msg: "Add task", data: newTask });
+  
+  if (newTask.priority === 'Important') {
+    toDoList.unshift(newTask);
+  } else {
+    toDoList.push(newTask);
+  }
+
+  res.json({ msg: "Task added", data: newTask });
+});
+
+// Update a task using id
+toDoListApp.put("/todolist/:id", (req, res) => {
+  const task = toDoList.find(task => task.id === req.params.id);
+  
+  if (task) {
+    task.taskName = req.body.taskName;
+    task.dueDate = req.body.dueDate;
+    task.dueTime = req.body.dueTime;
+    task.priority = req.body.priority;
+    res.json({ msg: "Edit task", data: toDoList });
+  } else {
+    res.status(404).json({ msg: "Task not found" });
+  }
 });
 
 // Delete a task by id
@@ -34,7 +55,7 @@ toDoListApp.delete("/todolist/:id", (req, res) => {
   
   if (taskIndex !== -1) {
     toDoList.splice(taskIndex, 1);
-    res.json({ msg: "Delete Task", data: toDoList });
+    res.json({ msg: "Deleted Task", data: toDoList });
   } else {
     res.status(404).json({ msg: "Task not found" });
   }

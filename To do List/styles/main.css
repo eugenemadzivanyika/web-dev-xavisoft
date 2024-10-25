@@ -177,6 +177,22 @@ body {
 .trash-button {
   background-color: transparent;
   border: none;
+  margin-left: 10px;
+}
+
+.edit-image {
+  width: 30px;
+}
+
+.edit-button {
+  background-color: transparent;
+  border: none;
+}
+
+.task-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .bg-modal {
