@@ -5,10 +5,10 @@ const cors = require('cors');
 
 const PORT = process.env.PORT || 3500;
 
-// Updating the initial task list to use UUIDs instead of integers for id
+// Dummy data
 const toDoList = [
-  { id: uuid(), taskName: 'eat', dueDate: '10/17/2024', dueTime: '23.00', priority: 'Urgent'},
-  { id: uuid(), taskName: 'sleep', dueDate: '10/17/2024', dueTime: '23.00', priority: 'Not urgent'},
+  { id: uuid(), taskName: 'eat', dueDate: '10/17/2024', dueTime: '23.00', priority: 'Important'},
+  { id: uuid(), taskName: 'sleep', dueDate: '10/17/2024', dueTime: '23.00', priority: 'Not Important'},
   { id: uuid(), taskName: 'pray'},
   { id: uuid(), taskName: 'read bible' }
 ];
