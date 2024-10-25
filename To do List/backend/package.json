@@ -1,0 +1,19 @@
+{
+  "name": "to-do-list-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "dev": " nodemon index"
+  },
+  "author": "Eugene Madzivanyika",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "uuid": "^10.0.0"
+  }
+}

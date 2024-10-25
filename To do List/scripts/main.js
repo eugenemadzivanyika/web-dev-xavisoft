@@ -38,7 +38,7 @@ quickTaskInput.addEventListener('input', function () {
 
 // Add a quick task when button is clicked
 document.getElementById('add-quick-task-button').addEventListener('click', function () {
-  addQuickTask();
+  addTask();
 });
 
 // Handle priority checkbox selection
@@ -57,22 +57,21 @@ notUrgentCheckbox.addEventListener('change', function() {
   }
 });
 
-// Dummy data to display at the beginning
-const toDoList = [
-  { taskName: 'eat', dueDate: '10/17/2024', dueTime: '23.00', priority: 'Urgent' },
-  { taskName: 'sleep', dueDate: '10/17/2024', dueTime: '23.00', priority: 'Not urgent' }
-];
+const URL = "http://localhost:3500/todolist";
 
-const quickTaskList = ['pray', 'read bible'];
+let toDoList = [];
 
-renderToDoList();
+getToDoList()
+  .then((todolist) => {
+    toDoList = todolist;
+    console.log(toDoList); 
+    renderToDoList();
+  })
+  .catch((err) => console.log(err)); 
 
 // Display all the tasks on the screen
 function renderToDoList() {
   let toDOListHTML = '';
-  let quickTaskHTML = '';
-  let finalHTML = '';
-
   const sortedToDoList = toDoList.sort((a, b) => {
     if (a.priority === 'Urgent' && b.priority !== 'Urgent') {
       return -1; 
@@ -86,12 +85,13 @@ function renderToDoList() {
   for (let i = 0; i < sortedToDoList.length; i++) {
     const taskObject = sortedToDoList[i];
     const { taskName, dueDate, dueTime, priority } = taskObject;
-
-    const html = `
+    let html ='';
+    if (taskName && dueDate && dueTime) {
+      html = `
       <div class="task">
         <div class="task-details">
           <div>
-            <input class="checkbox" type="checkbox" onchange="handleCheckboxChange(this, toDoList, ${i})">
+            <input class="checkbox" type="checkbox" onchange="deleteTask('${taskObject.id}'); renderToDoList();">
           </div>  
           <div>
             <p class="task-name">${taskName}</p>
@@ -100,41 +100,39 @@ function renderToDoList() {
           </div>
         </div>
         <div>
-          <button class="trash-button" onclick="toDoList.splice(${i}, 1); renderToDoList();">
+          <button class="trash-button" onclick="
+          deleteTask('${taskObject.id}'); renderToDoList();">
             <img class="trash-image" src="./images/delete.png" alt="delete-button">
           </button>
         </div>
       </div>
     `;
+    } else {
+      html = `
+      <div class="task">
+        <div class="task-details">
+          <div>
+            <input class="checkbox" type="checkbox" onchange="deleteTask('${taskObject.id}'); renderToDoList();">
+          </div>  
+          <div>
+            <p class="task-name">${taskName}</p>
+          </div>
+        </div>
+        <div>
+          <button class="trash-button" onclick="deleteTask('${taskObject.id}');renderToDoList();">
+            <img class="trash-image" src="./images/delete.png" alt="delete-button">
+          </button>
+        </div>
+      </div>
+    `;
+    }
 
     toDOListHTML += html;
   }
 
-  for (let j = 0; j < quickTaskList.length; j++) {
-    const task = quickTaskList[j];
-    const quickTaskHtml = `
-      <div class="task">
-        <div class="task-details">
-          <div>
-            <input class="checkbox" type="checkbox" onchange="handleCheckboxChange(this, quickTaskList, ${j})">
-          </div>  
-          <div>
-            <p class="task-name">${task}</p>
-          </div>
-        </div>
-        <div>
-          <button class="trash-button" onclick="quickTaskList.splice(${j}, 1); renderToDoList();">
-            <img class="trash-image" src="./images/delete.png" alt="delete-button">
-          </button>
-        </div>
-      </div>
-    `;
 
-    quickTaskHTML += quickTaskHtml;
-  }
-
-  finalHTML = toDOListHTML + quickTaskHTML;
-  document.querySelector('.task-container').innerHTML = finalHTML;
+  document.querySelector('.task-container').innerHTML = toDOListHTML;
+  
 }
 
 // Add a new task to the to-do list
@@ -142,45 +140,98 @@ function addTask() {
   const taskInputElement = document.querySelector('.new-task-name');
   const dueDateInputElement = document.querySelector('.due-date');
   const dueTimeInputElement = document.querySelector('.due-time');
-
-  const taskName = taskInputElement.value;
+  const quickTaskInputElement = document.querySelector('.quick-task-box');
+  
+  const taskName = taskInputElement.value || quickTaskInputElement.value;
   const dueDate = dueDateInputElement.value;
   const dueTime = dueTimeInputElement.value;
 
-  let priority = '';
-  if (urgentCheckbox.checked) {
-    priority = 'Urgent';
-  } else if (notUrgentCheckbox.checked) {
-    priority = 'Not Urgent';
-  }
+  if (taskName && dueDate && dueTime) {
 
-  toDoList.push({ taskName: taskName, dueDate: dueDate, dueTime: dueTime, priority: priority });
+    console.log("task begins posting begins");
+    
+
+    let priority = '';
+    if (urgentCheckbox.checked) {
+      priority = 'Important';
+    } else if (notUrgentCheckbox.checked) {
+      priority = 'Not Important';
+    }
+
+    const taskData = {
+      taskName: taskName,
+      dueDate: dueDate,
+      dueTime: dueTime,
+      priority: priority
+    };
+    
+    postData(taskData); 
+
+    taskInputElement.value = "";
+    dueDateInputElement.value = "";
+    dueTimeInputElement.value = "";
+    urgentCheckbox.checked = false;
+    notUrgentCheckbox.checked = false;  
   
-  taskInputElement.value = "";
-  dueDateInputElement.value = "";
-  dueTimeInputElement.value = "";
-  urgentCheckbox.checked = false;
-  notUrgentCheckbox.checked = false;
+  } else if (taskName) {
 
-  renderToDoList(); 
+    const taskData = { taskName: taskName };
+    postData(taskData);
+    quickTaskInputElement.value = "";
+    taskInputElement.value = "";
+  }else {
+    alert('Please Add task name');
+  } 
+  renderToDoList();
 }
 
-// Add a new quick task to the quick task list
-function addQuickTask() {
-  const quickTaskInputElement = document.querySelector('.quick-task-box');
-  const quickTask = quickTaskInputElement.value;
-
-  quickTaskList.push(quickTask);
-  quickTaskInputElement.value = "";
-  renderToDoList(); 
-}
-
-// Delete task when checkbox for finished is checked
-function handleCheckboxChange(checkbox, taskList, index) {
-  if (checkbox.checked) {
-    setTimeout(() => {
-      taskList.splice(index, 1);
-      renderToDoList();
-    }, 800);
+// Get to do list from backend
+async function getToDoList() {
+  try {
+    const response = await fetch(URL);
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    return err;
   }
 }
+
+// Delete task from backend
+function deleteTask(id) {
+  const deleteURL = URL + "/" + id;
+
+  fetch(deleteURL, {
+    method: 'DELETE'
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Task deleted:', data);
+    toDoList = toDoList.filter(task => task.id !== id);
+    renderToDoList();
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+    alert('Failed to delete task. Please try again.');
+  });
+}
+
+// Post data to backend
+function postData (taskData) {
+      fetch(URL, { 
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(taskData),
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+        
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+}
+
+
