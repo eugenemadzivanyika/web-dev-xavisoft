@@ -9,10 +9,9 @@ const PORT = process.env.PORT || 3500;
 
 app.use(express.json());
 app.use(cors());
-
 app.use(express.static("../To do List"));
-app.use(express.static("../To do List/scripts"));
 
+//  Serve api & ui together
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../To do List", "main.html"));
 })
@@ -35,9 +34,9 @@ app.post("/todolist", (req, res) => {
   const {taskName, dueDate, dueTime, priority} = req.body;
   createTask(id,taskName, dueDate, dueTime, priority, (err, data) => { 
     if(err){
-      res.status(500).send(err);
+      res.status(500).json(err);
     }else{
-      res.status(201).send(`Task Added where ID: ${id}`);
+      res.status(201).json(`Task Added where ID: ${id}`);
     }
   });
 });
@@ -48,9 +47,9 @@ app.put("/todolist/:id", (req, res) => {
 
   updateTask(req.params.id, taskName, dueDate, dueTime, priority, (err) => {
     if(err){
-      res.status(500).send(err.message)
+      res.status(500).json(err.message)
     } else{
-      res.status(200).send("Task Updated")
+      res.status(200).json("Task Updated")
     }
   })
 });
@@ -59,9 +58,9 @@ app.put("/todolist/:id", (req, res) => {
 app.delete("/todolist/:id", (req, res) => {
   deleteTask(req.params.id, (err) => {
     if(err) {
-      res.status(500).send(err.message);
+      res.status(500).json(err.message);
     } else {
-      res.status(200).send("Task deleted")
+      res.status(200).json("Task deleted")
     }
   })
 });

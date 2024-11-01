@@ -70,7 +70,6 @@ let toDoList = [];
 getToDoList()
   .then((todolist) => {
     toDoList = todolist;
-    console.log(toDoList); 
     renderToDoList();
   })
   .catch((err) => console.log(err)); 
@@ -189,6 +188,7 @@ function addTask() {
       .catch(err => console.log(err));
   }
 
+// Clear the inputs
   taskInputElement.value = '';
   dueDateInputElement.value = '';
   dueTimeInputElement.value = '';
@@ -223,6 +223,8 @@ function deleteTask(id) {
   })
   .catch((error) => {
     alert('Failed to delete task. Please try again.');
+    console.log(error);
+    
   });
 }
 
@@ -244,23 +246,29 @@ async function postData(taskData) {
 // edit task on modal
 function editTask(id) {
   const task = toDoList.find(task => task.id === id);
+  console.log(`This is the task: ${task}`);
+
+  const taskInputElement = document.querySelector('.new-task-name');
+  const dueDateInputElement = document.querySelector('.due-date');
+  const dueTimeInputElement = document.querySelector('.due-time');
+  const quickTaskInputElement = document.querySelector('.quick-task-box');
 
   if (task) {
     document.querySelector('.bg-modal').style.display = 'flex';
     document.querySelector('.new-task-name').value = task.taskName;
 
     if (task.dueDate) {
-      const [month, day, year] = task.dueDate.split('/');
-      document.querySelector('.due-date').value = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+      const [year, month, day] = task.dueDate.split('-');
+      dueDateInputElement.value = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
     } else {
-      document.querySelector('.due-date').value = '';
+      dueDateInputElement.value = '';
     }
 
     if (task.dueTime) {
-      const [hour, minute] = task.dueTime.split('.').map(num => num.padStart(2, '0'));
-      document.querySelector('.due-time').value = `${hour}:${minute}`;
+      const [hour, minute] = task.dueTime.split(':').map(num => num.padStart(2, '0'));
+      dueTimeInputElement.value = `${hour}:${minute}`;
     } else {
-      document.querySelector('.due-time').value = '';
+      dueTimeInputElement.value = '';
     }
 
     urgentCheckbox.checked = task.priority === 'Important';
@@ -268,7 +276,7 @@ function editTask(id) {
 
     document.querySelector('.bg-modal').setAttribute('data-editing-id', id);
 
-    document.getElementById('add-new-task-button').onclick = function() {
+    document.getElementById('add-new-task-button').onclick = () => {
       const editingId = document.querySelector('.bg-modal').getAttribute('data-editing-id');
       const updatedTaskData = {
         taskName: document.querySelector('.new-task-name').value,
@@ -294,7 +302,7 @@ async function updateTask(id, updatedTaskData) {
       body: JSON.stringify(updatedTaskData),
     });
     const data = await response.json();
-    console.log('Task updated successfully:', data);
+    console.log(data);
     renderToDoList();
   } catch (error) {
     console.error('Error updating task:', error);
