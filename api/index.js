@@ -3,11 +3,19 @@ const { v4: uuid } = require("uuid");
 const app = express();
 const { createTask, readTasks, updateTask, deleteTask} = require("./crud");
 const cors = require('cors');
+const path = require("path");
 
 const PORT = process.env.PORT || 3500;
 
 app.use(express.json());
 app.use(cors());
+
+app.use(express.static("../To do List"));
+app.use(express.static("../To do List/scripts"));
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "../To do List", "main.html"));
+})
 
 // Fetch all tasks
 app.get("/todolist", (req, res) => {
