@@ -7,11 +7,13 @@ const quickTaskInputElement = document.querySelector('.quick-task-box');
 // Show modal for adding a new task when the add button is clicked
 document.getElementById('add-task-button').addEventListener('click', function () {
   document.querySelector('.bg-modal').style.display = 'flex';
+  document.querySelector(".new-task-header-text").innerText = "New Task";
 });
 
 // Hide the modal when the back button is clicked
 document.getElementById('back-button').addEventListener('click', function () {
   document.querySelector('.bg-modal').style.display = 'none';
+   
   taskInputElement.value = "";
   dueDateInputElement.value = "";
   dueTimeInputElement.value = "";
@@ -23,6 +25,9 @@ document.getElementById('add-new-task-button').addEventListener('click', functio
   addTask();
   document.querySelector('.bg-modal').style.display = 'none';
 });
+
+
+
 
 // Change visibility of quick task button based on input focus
 const quickTaskInput = document.getElementById('quick-task-box');
@@ -71,6 +76,8 @@ getToDoList()
   .then((todolist) => {
     toDoList = todolist;
     renderToDoList();
+    console.log(toDoList);
+    
   })
   .catch((err) => console.log(err)); 
 
@@ -80,14 +87,16 @@ function renderToDoList() {
 
   for (let i = 0; i < toDoList.length; i++) {
     const taskObject = toDoList[i];
-    const { taskName, dueDate, dueTime, priority } = taskObject;
+    const { _id, taskName, dueDate, dueTime, priority } = taskObject;
+    
+    
     let html ='';
     if (taskName && dueDate && dueTime) {
       html = `
       <div class="task">
         <div class="task-details">
           <div>
-            <input class="checkbox" type="checkbox" onchange="deleteTask('${taskObject.id}'); renderToDoList();">
+            <input class="checkbox" type="checkbox" onchange="deleteTask('${_id}'); renderToDoList();">
           </div>  
           <div>
             <p class="task-name">${taskName}</p>
@@ -97,13 +106,13 @@ function renderToDoList() {
         </div>
         <div class="task-buttons">
           <button class="edit-button"
-            onclick="editTask('${taskObject.id}');
+            onclick="editTask('${_id}');
             renderToDoList();">
             <img class="edit-image" src="./images/edit.png" alt="edit-button">
           </button>
 
           <button class="trash-button" onclick="
-          deleteTask('${taskObject.id}'); renderToDoList();">
+          deleteTask('${_id}'); renderToDoList();">
             <img class="trash-image" src="./images/delete.png" alt="delete-button">
           </button>
         </div>
@@ -114,30 +123,31 @@ function renderToDoList() {
       <div class="task">
         <div class="task-details">
           <div>
-            <input class="checkbox" type="checkbox" onchange="deleteTask('${taskObject.id}'); renderToDoList();">
+            <input class="checkbox" type="checkbox" onchange="deleteTask('${_id}'); renderToDoList();">
           </div>  
           <div>
             <p class="task-name">${taskName}</p>
           </div>
         </div>
         <div class="task-buttons">
-            <button class="edit-button"
-            onclick="editTask('${taskObject.id}');
-            renderToDoList();">
-            <img class="edit-image" src="./images/edit.png" alt="edit-button">
-          </button>
+              <button class="edit-button"
+              onclick="editTask('${_id}');
+              modalHeader = 'Edit Task';
+              renderToDoList();">
+              <img class="edit-image" src="./images/edit.png" alt="edit-button">
+            </button>
 
-          <button class="trash-button" onclick="deleteTask('${taskObject.id}');renderToDoList();">
+          <button class="trash-button" onclick="deleteTask('${_id}');renderToDoList();">
             <img class="trash-image" src="./images/delete.png" alt="delete-button">
           </button>
         </div>
       </div>
     `;
     }
-
+    
     toDOListHTML += html;
   }
-
+  
   document.querySelector('.task-container').innerHTML = toDOListHTML;
 }
 
@@ -212,13 +222,14 @@ async function getToDoList() {
 // Delete task on server
 function deleteTask(id) {
   const deleteURL = `${URL}/${id}`;
-
+  console.log(deleteURL);
+  
   fetch(deleteURL, {
     method: 'DELETE'
   })
   .then(response => response.json())
   .then(data => {
-    toDoList = toDoList.filter(task => task.id !== id);
+    toDoList = toDoList.filter(task => task._id !== id);
     renderToDoList();
   })
   .catch((error) => {
@@ -245,7 +256,7 @@ async function postData(taskData) {
 
 // edit task on modal
 function editTask(id) {
-  const task = toDoList.find(task => task.id === id);
+  const task = toDoList.find(task => task._id === id);
   console.log(`This is the task: ${task}`);
 
   const taskInputElement = document.querySelector('.new-task-name');
@@ -255,10 +266,11 @@ function editTask(id) {
 
   if (task) {
     document.querySelector('.bg-modal').style.display = 'flex';
+    document.querySelector(".new-task-header-text").innerText = "Edit Task"; 
     document.querySelector('.new-task-name').value = task.taskName;
 
     if (task.dueDate) {
-      const [year, month, day] = task.dueDate.split('-');
+      const [year, month, day] = task.dueDate.split(/[-/]/);
       dueDateInputElement.value = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
     } else {
       dueDateInputElement.value = '';
@@ -285,7 +297,7 @@ function editTask(id) {
         priority: urgentCheckbox.checked ? 'Important' : (notUrgentCheckbox.checked ? 'Not Important' : ''),
       };
 
-      updateTask(editingId, updatedTaskData);
+      updateTask(id, updatedTaskData);
       document.querySelector('.bg-modal').removeAttribute('data-editing-id');
       document.querySelector('.bg-modal').style.display = 'none';
     };
@@ -295,6 +307,7 @@ function editTask(id) {
 // Update task on server
 async function updateTask(id, updatedTaskData) {
   const updateURL = `${URL}/${id}`;
+  console.log(updateURL);
   try {
     const response = await fetch(updateURL, {
       method: 'PUT',
@@ -309,3 +322,4 @@ async function updateTask(id, updatedTaskData) {
     alert('Failed to update task. Please try again.');
   }
 }
+

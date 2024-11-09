@@ -1,71 +1,37 @@
+require("dotenv").config();
 const express = require("express");
-const { v4: uuid } = require("uuid");
-const app = express();
-const { createTask, readTasks, updateTask, deleteTask} = require("./crud");
-const cors = require('cors');
+const cors = require("cors");
+const corsOptions = require("./config/corsOptions");
 const path = require("path");
-
+const mongoose = require("mongoose");
+const connectDB = require("./config/dbConn");
+const { logger } = require("./middleware/logEvents");
+const errorHandler = require("./middleware/errorHandler");
 const PORT = process.env.PORT || 3500;
 
-app.use(express.json());
-app.use(cors());
-app.use(express.static("../To do List"));
+// Connect to MongoDB 
+connectDB();
 
-//  Serve api & ui together
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../To do List", "main.html"));
-})
+const app = express();
 
-// Fetch all tasks
-app.get("/todolist", (req, res) => {
-  // res.json(toDoList);
-  readTasks((err, rows) => {
-    if(err){
-      res.status(500).send(err.message);
-    } else{
-      res.status(200).json(rows);
-    }
+// Middleware configuration
+app.use(express.json());           
+app.use(cors(corsOptions));          // Enable CORS with specified options
+app.use(express.static("../To do List")); // Serve static files
+
+// Custom logging middleware
+app.use(logger);
+
+// Route for to-do list API operations
+app.use("/todolist", require("./routes/crud"));
+
+// error handling middleware
+app.use(errorHandler);
+  
+// Start server only after successful MongoDB connection
+mongoose.connection.once("open", () => {
+  console.log("Successfully Connected to MongoDB");
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
   });
-});
-
-// Add a new task
-app.post("/todolist", (req, res) => {
-  const id = uuid();
-  const {taskName, dueDate, dueTime, priority} = req.body;
-  createTask(id,taskName, dueDate, dueTime, priority, (err, data) => { 
-    if(err){
-      res.status(500).json(err);
-    }else{
-      res.status(201).json(`Task Added where ID: ${id}`);
-    }
-  });
-});
-
-// Update a task using id
-app.put("/todolist/:id", (req, res) => {
-  const {taskName, dueDate, dueTime, priority} = req.body;
-
-  updateTask(req.params.id, taskName, dueDate, dueTime, priority, (err) => {
-    if(err){
-      res.status(500).json(err.message)
-    } else{
-      res.status(200).json("Task Updated")
-    }
-  })
-});
-
-// Delete a task by id
-app.delete("/todolist/:id", (req, res) => {
-  deleteTask(req.params.id, (err) => {
-    if(err) {
-      res.status(500).json(err.message);
-    } else {
-      res.status(200).json("Task deleted")
-    }
-  })
-});
-
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
 });
