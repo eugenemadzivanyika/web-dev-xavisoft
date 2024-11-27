@@ -63,7 +63,7 @@ notUrgentCheckbox.addEventListener('change', function() {
   }
 });
 
-const URL = "http://localhost:3500/todolist";
+const URL = "/todolist";
 let toDoList = [];
 
 // Set local to do list equal to server to do list
