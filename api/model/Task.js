@@ -9,7 +9,7 @@ const taskSchema = new Schema({
   },
   dueDate: String,    
   dueTime: String,    
-  priority: String    
+  priority: Boolean    
 });
 
 module.exports = mongoose.model("Task", taskSchema);
