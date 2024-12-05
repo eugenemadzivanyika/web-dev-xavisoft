@@ -17,7 +17,7 @@ const app = express();
 // Middleware configuration
 app.use(express.json());           
 app.use(cors(corsOptions));          // Enable CORS with specified options
-app.use(express.static("../To do List")); // Serve static files
+app.use(express.static("../UI/build")); // Serve static files
 
 // Custom logging middleware
 app.use(logger);
