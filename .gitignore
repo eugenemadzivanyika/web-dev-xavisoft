@@ -2,3 +2,4 @@
 *.db
 /api/logs/
 /api/.env
+/UI/node_modules/
